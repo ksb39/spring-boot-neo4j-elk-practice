@@ -1,0 +1,62 @@
+version: '2.1'
+services:
+#  neo4j:
+#    image: neo4j:latest
+#    ports:
+#      - "7474:7474/tcp"
+#    volumes:
+#      - "./neo4j/data:$HOME/neo4j/data"
+  spring-boot:
+    image: spring-boot:0.0.1-SNAPSHOT
+    depends_on:
+      - logstash
+    ports:
+      - "8888:8888/tcp"
+#    logging:
+#      driver: gelf
+#      options:
+#        gelf-address: "udp://localhost:12202"
+  nginx:
+    build:
+      context: ./nginx/
+    image: custom/nginx:latest
+    depends_on:
+      - logstash
+    ports:
+      - "80:80/tcp"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://localhost:12201"
+  logstash:
+    image: logstash:latest
+    depends_on:
+      - kibana
+    command: -f /etc/logstash/conf.d/
+    volumes:
+      - ./logstash/config:/etc/logstash/conf.d
+    ports:
+      - "12201:12201/udp"
+#      - "12202:12202/udp"
+  kibana:
+    image: kibana:latest
+    depends_on:
+      - elasticsearch
+    ports:
+      - "5601:5601/tcp"
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+  elasticsearch:
+    image: elasticsearch:latest
+    ports:
+      - "9200:9200/tcp"
+    environment:
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    volumes:
+      - ./elasticsearch/data:/usr/share/elasticsearch/data
