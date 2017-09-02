@@ -4,8 +4,11 @@ services:
 #    image: neo4j:latest
 #    ports:
 #      - "7474:7474/tcp"
+#      - "7687:7687/tcp"
 #    volumes:
 #      - "./neo4j/data:$HOME/neo4j/data"
+#    environment:
+#      - NEO4J_AUTH=neo4j/secret
   spring-boot:
     image: spring-boot:0.0.1-SNAPSHOT
     depends_on:

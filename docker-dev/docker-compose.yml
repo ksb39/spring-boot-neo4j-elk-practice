@@ -1,0 +1,11 @@
+version: '2.1'
+services:
+  neo4j:
+    image: neo4j:latest
+    ports:
+      - "7474:7474/tcp"
+      - "7687:7687/tcp"
+    volumes:
+      - "./neo4j/data:$HOME/neo4j/data"
+    environment:
+      - NEO4J_AUTH=neo4j/secret

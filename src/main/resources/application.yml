@@ -1,3 +1,14 @@
 server:
   port: 8888
   contextPath: /
+
+spring:
+  data:
+    neo4j:
+      uri: http://localhost:7474
+      username: neo4j
+      password: secret
+
+  resources:
+    cache-period: 0
+    static-locations: file:src/main/resources/static/
