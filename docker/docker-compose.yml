@@ -12,10 +12,10 @@ services:
       - logstash
     ports:
       - "8888:8888/tcp"
-#    logging:
-#      driver: gelf
-#      options:
-#        gelf-address: "udp://localhost:12202"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://localhost:12202"
   nginx:
     build:
       context: ./nginx/
@@ -37,7 +37,7 @@ services:
       - ./logstash/config:/etc/logstash/conf.d
     ports:
       - "12201:12201/udp"
-#      - "12202:12202/udp"
+      - "12202:12202/udp"
   kibana:
     image: kibana:latest
     depends_on:
